@@ -35,3 +35,11 @@ pnpm-lock.yaml binary
 *.swo binary
 *.swn binary
 *~ binary
+
+*.md text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+
+*.png binary
+*.jpg binary
+*.md diff=markdown

@@ -19,7 +19,7 @@ export default defineConfig({
       ]
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/yourname/wasm-memx' }
+      { icon: 'github', link: 'https://github.com/FrankWangMing/wasm-memx' }
     ]
   }
 })
