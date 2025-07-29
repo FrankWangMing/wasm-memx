@@ -1,2 +1,37 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+/node_modules/ text=auto
+
+# Rust source files
+*.rs text diff=rust
+
+# JavaScript and TypeScript files
+*.js  text diff=javascript
+*.ts  text diff=typescript
+
+# WebAssembly binaries
+*.wasm binary
+
+# Ignore .turbo (if it's a lock or cache file)
+.turbo binary# WebAssembly 文件
+*.wat text
+*.wasm binary
+# Rust 相关文件
+/target/ binary
+.cargo/config text
+# TypeScript 配置文件
+*.tsx text diff=typescript
+*.json text
+# 包管理器锁文件
+package-lock.json binary
+yarn.lock binary
+pnpm-lock.yaml binary
+# 编译输出目录
+/dist/ binary
+/build/ binary
+# 忽略临时文件
+*.swp binary
+*.swo binary
+*.swn binary
+*~ binary

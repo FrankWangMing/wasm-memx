@@ -1,0 +1,33 @@
+{
+  "name": "wasm-memx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
+    "build:dev": "rollup -c --environment NODE_ENV:development",
+    "build:prod": "rollup -c --environment NODE_ENV:production",
+    "build:dev:watch": "rollup -c --environment NODE_ENV:development -w",
+    "build:prod:watch": "rollup -c --environment NODE_ENV:production -w",
+    "docs": "vitepress build doc",
+    "docs:dev": "vitepress dev doc",
+    "docs:build": "vitepress build doc",
+    "docs:preview": "vitepress preview doc"
+  },
+  "keywords": [],
+  "author": "Frank",
+  "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "typedoc": "^0.28.8",
+    "vitepress": "^1.6.3"
+  },
+  "dependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "rollup": "^4.46.1"
+  }
+}
