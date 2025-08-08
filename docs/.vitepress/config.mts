@@ -4,6 +4,12 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "wasm-memx",
   description: "Zero-copy data sharing for WebAssembly and Web Workers",
+  head: [
+    [
+      'link',
+      { rel: 'icon', href: '/logo.png' }  // 放在 public 目录
+    ]
+  ],
   themeConfig: {
     logo: '/logo.png',
     nav: [

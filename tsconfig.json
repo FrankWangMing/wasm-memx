@@ -1,12 +1,19 @@
+// tsconfig.json
 {
   "compilerOptions": {
-    "target": "ES2019",
+    "target": "ES2022",
     "module": "ESNext",
+    "moduleResolution": "bundler",
     "declaration": true,
-    "outDir": "dist",
+    "declarationDir": "./dist/types",
+    "noEmit": true,                // 完全由 Rollup 控制输出
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,         // 确保与 Rollup 兼容
+    "typeRoots": ["node_modules/@types","./types.d.ts"]
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"],
 }
