@@ -21,26 +21,6 @@ export class WasmSharedMemory {
         });
         this.wasmUrl = wasmUrl;
     }
-
-    /**
-     * 确保在用户交互后执行（浏览器安全要求）
-     */
-    private async ensureUserGesture(): Promise<void> {
-        if (typeof window === 'undefined') return;
-        
-        if (!window.navigator.userActivation?.hasBeenActive) {
-            await new Promise(resolve => {
-                const handler = () => {
-                    document.removeEventListener('click', handler);
-                    document.removeEventListener('keydown', handler);
-                    resolve(null);
-                };
-                document.addEventListener('click', handler, { once: true });
-                document.addEventListener('keydown', handler, { once: true });
-            });
-        }
-    }
-
     /**
      * 加载并实例化 WASM 模块
      */
@@ -48,9 +28,7 @@ export class WasmSharedMemory {
         if (this.instance) return;
 
         try {
-            // 确保用户已交互
-            await this.ensureUserGesture();
-
+ 
             // 加载 WASM 二进制
             const response = await fetch(this.wasmUrl);
             if (!response.ok) {

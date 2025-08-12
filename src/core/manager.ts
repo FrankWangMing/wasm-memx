@@ -1,4 +1,4 @@
-import { WasmSharedMemory } from "./wasm-loader";
+import * as wasm from "../../Cargo.toml";
 
 export class SharedBufferManager {
   private ptr: number | null = null;
@@ -8,34 +8,18 @@ export class SharedBufferManager {
     this.size = size;
   }
   async test() {
-    // 使用示例
-    async function demo() {
-      // 检查浏览器支持
-      if (typeof SharedArrayBuffer === "undefined") {
-        console.error("当前环境不支持 SharedArrayBuffer");
-        return;
-      }
+    console.log("wasm");
+    // init() 是由插件自动生成的 wasm 初始化方法
+    console.log("wasm", wasm);
 
-      // 创建实例
-      const wasm = new WasmSharedMemory(
-        "/wasm/rust.wasm"
-      );
-      console.log(wasm)
-      try {
-        // 写入数据
-        await wasm.write(0, 12345);
-
-        // 读取数据
-        const value = await wasm.read(0);
-        console.log(`从 WASM 读取的值: ${value}`);
-
-        // 直接通过 JS 访问共享内存
-        const arr = new Uint32Array(wasm.getBuffer());
-        console.log(`JS 直接读取的值: ${arr[0]}`);
-      } catch (error) {
-        console.error("操作失败:", error);
-      }
-    }
-    demo();
+    // await init();
+    // // 导入wasm-bindgen生成的绑定
+    // const memory = create_shared_memory();
+    // const buffer = memory.buffer; // SharedArrayBuffer
+    // const view = new Uint8Array(buffer);
+    // console.log(buffer == view.buffer);
+    // console.log(view[0]); // JS 读
+    // view[0] = 42; // JS 写
+    // console.log(view[0]); // JS 读
   }
 }

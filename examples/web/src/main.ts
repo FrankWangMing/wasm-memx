@@ -1,34 +1,10 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import { SharedBufferManager } from "../../../";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
-
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
-
-import { SharedBufferManager } from '../../..'
- 
-
-// // 创建一个共享缓冲区管理器
+console.log(SharedBufferManager)
+// // // 创建一个共享缓冲区管理器
 const manager = new SharedBufferManager(1024); // 1024 bytes
 
+console.log(await manager.test());
 
-console.log(await manager.test())
 
+console.log("hello")

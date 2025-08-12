@@ -6,3 +6,6 @@
 
 /rust/target/*
 .turbo
+
+/target
+
