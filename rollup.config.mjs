@@ -13,7 +13,7 @@ const WASM_SOURCE = "rust/target/wasm32-unknown-unknown/release/rust.wasm"; // �
 const WASM_OUTPUT_DIR = "dist";
 
 export default defineConfig({
-  input: "src/index.ts",
+  input: "api/index.ts",
   output: {
     dir: "dist",
     format: "es",
@@ -21,6 +21,14 @@ export default defineConfig({
   plugins: [
     rust({
       inlineWasm: true,
+      extraArgs: {
+        cargo: [],
+
+        wasmBindgen: [],
+
+        // TODO figure out better optimization options ?
+        wasmOpt: [ ],
+      },
     }),
     // 2. Wasm 插件：处理代码中的导入
     wasm({

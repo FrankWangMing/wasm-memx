@@ -1,16 +1,15 @@
 use js_sys::Float64Array;
-use js_sys::{Object, WebAssembly};
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
-pub fn create_shared_memory() -> JsValue {
-    // 创建 SharedArrayBuffer-backed memory
-    let mem_desc = Object::new();
-    js_sys::Reflect::set(&mem_desc, &"initial".into(), &JsValue::from(2)).unwrap(); // 页数（64KB 一页）
-    js_sys::Reflect::set(&mem_desc, &"maximum".into(), &JsValue::from(2)).unwrap();
-    js_sys::Reflect::set(&mem_desc, &"shared".into(), &JsValue::TRUE).unwrap();
+mod geometry; // 引入 geometry.rs
+pub mod math;
+mod memory;
+pub use math::*;
 
-    let memory = WebAssembly::Memory::new(&mem_desc).unwrap();
+#[wasm_bindgen]
+pub fn create_shared_memory(initial_pages: u32, maximum_pages: u32) -> JsValue {
+    // 创建 SharedArrayBuffer-backed memory
+    let memory = memory::create_shared_memory(initial_pages, maximum_pages);
     JsValue::from(memory)
 }
 
@@ -48,14 +47,7 @@ pub fn sum(ptr: *mut f64, count: usize) -> f64 {
 
 #[wasm_bindgen(start)]
 pub fn run() {
-    demo();
 }
 
-fn demo() {
-    let name = "World";
-    log(&format!("Hello, {}!", name));
 
-    // This is supposed to be an improvement, but it is worse!
-    use web_sys::console;
-    console::log_1(&"Hello, ".into());
-}
+
