@@ -20,7 +20,7 @@ export class SharedMemoryBase {
   }
 
   getView<T extends ArrayBufferView = Uint8Array>(
-    ctor: { new (buf: ArrayBuffer, ...args: any[]): T },
+    ctor: { new(buf: ArrayBuffer, ...args: any[]): T },
     offset = 0,
     length?: number
   ): T {

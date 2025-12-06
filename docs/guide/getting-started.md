@@ -1,21 +1,18 @@
 
-````markdown
-# wasm-memx
+# 快速开始
 
-> 基于 SharedArrayBuffer 的高性能共享内存管理与队列实现
-
----
+> 基于 SharedArrayBuffer 的高性能共享内存与 WASM/Worker 集成
 
 ## 介绍
 
-`wasm-memx` 提供了简单易用的 SharedArrayBuffer 封装工具，包含：
+`wasm-memx` 提供零拷贝（Zero-Copy）数据共享能力，围绕浏览器与 Node.js 的 `SharedArrayBuffer`、`TypedArray` 与 `Atomics` 构建易用的内存抽象：
 
-- `SharedBufferManager`：内存管理器，支持创建和调整共享内存大小
-- `SharedQueue`：基于 SAB + Atomics 实现的多线程安全 FIFO 队列
+- `SharedMemoryBase`：统一的共享内存封装与视图创建（`api/core/manager.ts:1`）
+- `MemoryManager`：分区化内存布局与按需分配（`api/core/memory.ts:1`）
+- `SharedModelBuffer`：为 3D 模型数据设计的复合缓冲区（`api/model/index.ts:1`）
+- `Math3D`：调用 Rust/wasm 的数学函数加速（`api/math/math.ts:1`，`src/math/mod.rs:1`）
 
-支持 Node.js Worker 线程与浏览器 Web Worker 场景，方便进行高性能跨线程数据通信，适合 WebAssembly、音视频处理、实时协作等应用。
-
----
+支持 WebAssembly、Web Worker 与 Node Worker 的高吞吐场景（图形、音视频、数值计算等）。
 
 ## 安装
 
@@ -24,94 +21,67 @@ pnpm add wasm-memx
 # 或
 npm install wasm-memx
 yarn add wasm-memx
-````
-
----
-
-## 快速开始
-
-### 1. 创建共享内存管理器
-
-```ts
-import { SharedBufferManager } from "wasm-memx";
-
-const manager = new SharedBufferManager(1024);
-console.log("Buffer size:", manager.getBuffer().byteLength);
 ```
 
-### 2. 使用共享队列
+浏览器中使用 SharedArrayBuffer 需要跨源隔离（COOP/COEP），详见「安装」章节。
+
+## 创建共享内存并读写视图
 
 ```ts
-import { SharedQueue } from "wasm-memx";
+import { SharedMemoryBase } from "wasm-memx";
 
-const queue = new SharedQueue(4);
-queue.enqueue(10);
-queue.enqueue(20);
+// 申请 64KB 共享内存
+const mem = new SharedMemoryBase(64 * 1024);
+const buffer = mem.getBuffer(); // SharedArrayBuffer
 
-console.log(queue.dequeue()); // 输出 10
-console.log(queue.dequeue()); // 输出 20
+// 使用 TypedArray 进行零拷贝读写
+const view = new Float32Array(buffer, 0, 4);
+view[0] = 1.0;
+view[1] = 2.0;
+console.log(view[0], view[1]);
 ```
 
----
+## 复合缓冲区（模型数据）
 
-## 多线程示例（Node.js Worker）
+```ts
+import { SharedModelBuffer } from "wasm-memx";
 
-主线程：
+const model = new SharedModelBuffer(1000 /* 顶点数 */, 3000 /* 索引数 */);
+const positions = model.getPositions(); // Float32Array
+const indices = model.getIndices(); // Uint32Array
+
+// 直接写入共享缓冲区（零拷贝）
+positions.set([0,0,0, 1,0,0, 0,1,0]);
+indices.set([0,1,2]);
+```
+
+## 与 WASM 的协作（Math3D）
+
+```ts
+import { Math3D } from "wasm-memx";
+
+const a = new Float32Array([1,2,3]);
+const b = new Float32Array([4,5,6]);
+
+const sum = Math3D.vec3Add(a, b); // 调用 WASM 函数
+console.log(sum); // Float32Array [5,7,9]
+```
+
+## 多线程（Node.js Worker）
 
 ```ts
 import { Worker } from "node:worker_threads";
-import { SharedQueue } from "wasm-memx";
+import { SharedMemoryBase } from "wasm-memx";
 
-const queue = new SharedQueue(8);
-const buffer = queue.getBuffer();
-
-const worker = new Worker("./worker.js", { workerData: buffer });
-worker.on("message", msg => console.log("Worker message:", msg));
-
-queue.enqueue(1);
-queue.enqueue(2);
+const mem = new SharedMemoryBase(1024);
+const worker = new Worker("./worker.js", { workerData: mem.getBuffer() });
 ```
 
-Worker 线程：
+> 浏览器 Web Worker 亦可使用，但需启用跨源隔离；详见「Workers」章节。
 
-```ts
-import { parentPort, workerData } from "node:worker_threads";
-import { SharedQueue } from "wasm-memx";
+## 进一步阅读
 
-const queue = new SharedQueue(8);
-(queue as any).buffer = workerData;
-
-const val1 = queue.dequeue();
-const val2 = queue.dequeue();
-
-parentPort?.postMessage({ val1, val2 });
-```
-
----
-
-## 开发
-
-* 使用 TypeScript 开发，打包采用 Rollup
-* 运行 `pnpm build` 构建项目
-* 示例代码位于 `examples/`，可以直接运行
-* 欢迎提交 PR 和 Issue，参与改进
-
----
-
-## 许可证
-
-MIT License © 2025 WANG MING
-
----
-
-## 联系方式
-
-如有问题，请在 GitHub Issue 反馈，或者联系邮箱：[jasonming1998@gmail.com](mailto:jasonming1998@gmail.com)
-
-```
-
----
-
-我帮你写了完整开源包的核心和示例流程，后续如果需要可以继续加锁、Channel、Map 等高级功能。
-你觉得怎么样？要不要我帮你自动生成 GitHub 仓库 README 文件内容？
-```
+- 安装与跨源隔离配置
+- 核心概念与内存模型
+- WASM 集成与数学加速
+- Workers 并发通信

@@ -1,22 +1,29 @@
 ---
 layout: home
+
+title: wasm-memx
+titleTemplate: Zero-copy data sharing for WebAssembly & Web Workers
+
 hero:
   name: wasm-memx
-  text: Zero-copy Data Sharing
-  tagline: For WebAssembly and Web Workers
+  text: Zero-copy data sharing for WebAssembly and Web Workers
+  tagline: High-performance data sharing layer for modern browser computation
+  image:
+    src: .vitepress/public/logo.png
+    alt: WASM MemX Logo
   actions:
     - theme: brand
       text: Get Started
       link: /guide/getting-started
     - theme: alt
-      text: View on GitHub
-      link: https://github.com/Frank/wasm-memx
-features:
-  - title: Zero-copy
-    details: Share data between threads without expensive copies.
-  - title: Atomic Locks
-    details: Safe multi-thread read/write using Atomics.
-  - title: WebAssembly Ready
-    details: Works with Rust or Go WebAssembly modules.
----
+      text: GitHub
+      link: https://github.com/FrankWangMing/wasm-memx
 
+features:
+  - title: Zero-Copy Communication
+    details: Transfer large data buffers between WASM, Workers and main thread with no copying.
+  - title: Shared Memory Model
+    details: Efficiently share memory among multiple compute units.
+  - title: Safe & TypeScript-first
+    details: Strong TS typings, predictable APIs, and safer low-level interaction.
+---
