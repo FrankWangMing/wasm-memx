@@ -9,7 +9,7 @@ hero:
   text: Zero-copy data sharing for WebAssembly and Web Workers
   tagline: High-performance data sharing layer for modern browser computation
   image:
-    src: .vitepress/public/logo.png
+    src: logo.png
     alt: WASM MemX Logo
   actions:
     - theme: brand
