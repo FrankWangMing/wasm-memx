@@ -16,11 +16,11 @@ export class SharedMemoryBase {
   }
 
   getBuffer(): SharedArrayBuffer {
-    return this.memory.buffer as SharedArrayBuffer;
+    return this.memory.buffer as unknown as SharedArrayBuffer;
   }
 
   getView<T extends ArrayBufferView = Uint8Array>(
-    ctor: { new(buf: ArrayBuffer, ...args: any[]): T },
+    ctor: { new(buffer: ArrayBufferLike, byteOffset?: number, length?: number): T },
     offset = 0,
     length?: number
   ): T {

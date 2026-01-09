@@ -45,6 +45,12 @@ pub fn vec3_normalize(a: &[f32]) -> Vec<f32> {
 }
 
 #[wasm_bindgen]
+pub fn vec3_scale(a: &[f32], scalar: f32) -> Vec<f32> {
+    let a: [f32; 3] = a.try_into().unwrap();
+    (Vec3::from(a) * scalar).to_array().to_vec()
+}
+
+#[wasm_bindgen]
 pub fn quat_from_axis_angle(axis: &[f32], angle: f32) -> Vec<f32> {
     let axis: [f32; 3] = axis.try_into().unwrap();
     Quat::from_axis_angle(Vec3::from(axis), angle)
@@ -62,12 +68,63 @@ pub fn quat_mul(a: &[f32], b: &[f32]) -> Vec<f32> {
 }
 
 #[wasm_bindgen]
+pub fn quat_multiply(a: &[f32], b: &[f32]) -> Vec<f32> {
+    quat_mul(a, b)
+}
+
+#[wasm_bindgen]
+pub fn quat_rotate_vec3(q: &[f32], v: &[f32]) -> Vec<f32> {
+    let q: [f32; 4] = q.try_into().unwrap();
+    let v: [f32; 3] = v.try_into().unwrap();
+    (Quat::from_array(q) * Vec3::from(v)).to_array().to_vec()
+}
+
+#[wasm_bindgen]
 pub fn mat4_mul(a: &[f32], b: &[f32]) -> Vec<f32> {
     let a: [f32; 16] = a.try_into().unwrap();
     let b: [f32; 16] = b.try_into().unwrap();
     (Mat4::from_cols_array(&a) * Mat4::from_cols_array(&b))
         .to_cols_array()
         .to_vec()
+}
+
+#[wasm_bindgen]
+pub fn mat4_multiply(a: &[f32], b: &[f32]) -> Vec<f32> {
+    mat4_mul(a, b)
+}
+
+#[wasm_bindgen]
+pub fn mat4_identity() -> Vec<f32> {
+    Mat4::IDENTITY.to_cols_array().to_vec()
+}
+
+#[wasm_bindgen]
+pub fn mat4_translation(v: &[f32]) -> Vec<f32> {
+    let v: [f32; 3] = v.try_into().unwrap();
+    Mat4::from_translation(Vec3::from(v))
+        .to_cols_array()
+        .to_vec()
+}
+
+#[wasm_bindgen]
+pub fn mat4_rotation_x(angle: f32) -> Vec<f32> {
+    Mat4::from_rotation_x(angle).to_cols_array().to_vec()
+}
+
+#[wasm_bindgen]
+pub fn mat4_rotation_y(angle: f32) -> Vec<f32> {
+    Mat4::from_rotation_y(angle).to_cols_array().to_vec()
+}
+
+#[wasm_bindgen]
+pub fn mat4_rotation_z(angle: f32) -> Vec<f32> {
+    Mat4::from_rotation_z(angle).to_cols_array().to_vec()
+}
+
+#[wasm_bindgen]
+pub fn mat4_scale(v: &[f32]) -> Vec<f32> {
+    let v: [f32; 3] = v.try_into().unwrap();
+    Mat4::from_scale(Vec3::from(v)).to_cols_array().to_vec()
 }
 
 #[wasm_bindgen]
@@ -87,8 +144,21 @@ pub fn look_at_rh(eye: &[f32], target: &[f32], up: &[f32]) -> Vec<f32> {
 }
 
 #[wasm_bindgen]
+pub fn mat4_look_at(eye: &[f32], target: &[f32], up: &[f32]) -> Vec<f32> {
+    look_at_rh(eye, target, up)
+}
+
+#[wasm_bindgen]
 pub fn perspective_rh(fov_y: f32, aspect: f32, near: f32, far: f32) -> Vec<f32> {
     Mat4::perspective_rh(fov_y, aspect, near, far)
+        .to_cols_array()
+        .to_vec()
+}
+
+#[wasm_bindgen]
+pub fn mat4_perspective(fov_y: f32, aspect: f32, near: f32, far: f32) -> Vec<f32> {
+    // 更贴近 WebGL 习惯（NDC Z ∈ [-1, 1]）
+    Mat4::perspective_rh_gl(fov_y, aspect, near, far)
         .to_cols_array()
         .to_vec()
 }

@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "pnpm run build:dev",
     "build": "rimraf dist && rollup --config",
+    "test": "pnpm -s build && node --test \"tests/node/**/*.test.mjs\"",
     "watch": "rimraf dist && rollup --config --watch",
     "build:watch": "rollup -c -w",
     "build:dev": "rollup -c --environment NODE_ENV:development",
@@ -41,6 +42,7 @@
     "@rollup/plugin-typescript": "^12.1.4",
     "@rollup/plugin-url": "^8.0.2",
     "@rollup/plugin-wasm": "^6.2.2",
+    "@babel/plugin-bugfix-firefox-class-in-computed-class-key": "^7.28.0",
     "@types/node": "^24.1.0",
     "@wasm-tool/rollup-plugin-rust": "^3.0.5",
     "binaryen": "^123.0.0",

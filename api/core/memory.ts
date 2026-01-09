@@ -42,7 +42,8 @@ export class MemoryManager {
   }
 
   getBuffer(): SharedArrayBuffer {
-    return this.memory.buffer as SharedArrayBuffer;
+    // TS 类型中 WebAssembly.Memory.buffer 是 ArrayBuffer，但 shared memory 运行时会是 SharedArrayBuffer
+    return this.memory.buffer as unknown as SharedArrayBuffer;
   }
 
   /** 重置所有分区（场景切换时调用） */
